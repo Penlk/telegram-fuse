@@ -1,4 +1,3 @@
-#include <iostream>
 #include "cpr/cpr.h"
 
 #include "operations/telegram_ops.hpp"
@@ -8,8 +7,14 @@
 
 #include <fuse3/fuse_lowlevel.h>
 #include <chrono>
+#include <iostream>
 
-int main() {
+int main(int argc, char *argv[]) {
+    if (argc == 1) {
+        std::cerr << "Mountpoint is required." << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
     struct fuse_args args = FUSE_ARGS_INIT(0, NULL);
     fuse_opt_add_arg(&args, "telegram-fs");
     fuse_opt_add_arg(&args, "-odefault_permissions");
@@ -25,7 +30,7 @@ int main() {
     if (!se)
         exit(EXIT_FAILURE);
     
-    int err = fuse_session_mount(se, "/home/penlk/projects/osi/test-fs");
+    int err = fuse_session_mount(se, argv[1]);
     if (err) 
         exit(EXIT_FAILURE);
     
