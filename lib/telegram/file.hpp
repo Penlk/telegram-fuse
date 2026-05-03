@@ -2,8 +2,6 @@
 
 #include <string>
 #include <chrono>
-#include <format>
-#include "cpr/cpr.h"
 
 namespace tg {
 
@@ -17,17 +15,27 @@ private:
 
 class File {
 public:
-    File(std::string file_id, std::string chat_id);
+    File(std::string file_id, std::string chat_id, long long message_id, std::string name_file, std::optional<std::string> tag = std::nullopt);
 
     std::string& GetData();
+
+    void EditData(const std::string& new_data);
+
+    void swap(File& other) noexcept;
+
+    void Delete();
 
     static File CreateFile(const std::string& data, const std::string& chat_id, 
         const std::string& name_file, std::optional<std::string> tag=std::nullopt);
 private:
-    bool enabled_data;
+    bool dirty;
+    bool deleted;
     std::string file_id;
     std::string chat_id;
-    std::string data;
+    std::string name_file;
+    std::optional<std::string> tag;
+    std::optional<std::string> data;
+    long long message_id;
     FilePath file_path;
 };
 
